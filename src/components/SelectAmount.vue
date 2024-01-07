@@ -1,16 +1,18 @@
 <template>
   <form @submit.prevent>
-    <input type="number" id="quantity" name="quantity" min="1" max="100" v-model="amount" />
+    <input type="number" id="quantity" name="quantity" min="1" max="35" v-model="amount" />
     <button type="submit" @click="showAmount">Start Quiz</button>
   </form>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 
 const amount = ref(1)
 const link = ref('')
 const questions = ''
+
+const emit = defineEmits(['data'])
 
 async function showAmount() {
   try {
@@ -24,6 +26,7 @@ async function showAmount() {
     const data = await response.json()
     console.log(data)
     link.value = data
+    emit('data', link.value)
   } catch (error) {
     console.error('Error fetching data:', error)
   }
