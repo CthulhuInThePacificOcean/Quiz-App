@@ -52,10 +52,8 @@ function nextQuestion() {
     answerSubmitted.value = false
     const listItems = answerList.value.children
     for (const item of listItems) {
-      if (item.textContent.trim().includes(selected.value)) {
-        item.classList.add('text-blue-400')
-        item.classList.remove('text-green-400')
-      }
+      item.classList.remove('text-green-400')
+      item.classList.remove('text-red-400')
     }
   }
 }
@@ -71,20 +69,28 @@ function answerClicked(e) {
 }
 
 function answerSubmit() {
+  const listItems = answerList.value.children
   if (selected.value == null) {
     alert('Please select an answer.')
-  } else if (selected.value == props.questions[index.value].correctAnswer) {
-    const listItems = answerList.value.children
-    for (const item of listItems) {
-      if (item.textContent.trim().includes(selected.value)) {
-        item.classList.add('text-blue-400')
-        item.classList.add('text-green-400')
-      }
-    }
-    correctAnswers.value += 1
-  } else {
-    alert('incorrect')
+    return
   }
+
+  for (const item of listItems) {
+    const isCorrectAnswer = item.textContent.trim() === props.questions[index.value].correctAnswer
+    const isSelectedAnswer = item.textContent.trim() === selected.value
+
+    if (isSelectedAnswer && isCorrectAnswer) {
+      item.classList.add('text-green-400')
+      correctAnswers.value += 1
+    } else if (isSelectedAnswer) {
+      item.classList.add('text-red-400')
+    } else if (isCorrectAnswer) {
+      item.classList.add('text-green-400')
+    }
+
+    item.classList.remove('text-blue-400')
+  }
+
   answerSubmitted.value = true
 }
 
